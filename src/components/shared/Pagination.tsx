@@ -22,7 +22,6 @@ export function PaginationList({
   const toWhere = (value: string) => {
     const params = new URLSearchParams(searchParam.toString());
     params.set("page", value);
-    console.log("href", value, params);
     return `${pathname}?${params}`;
   };
   const renderPaginationItems = () => {

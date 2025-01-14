@@ -8,7 +8,7 @@ export const useGetAllProductsQuery = ({
   queryParams: string;
 }) =>
   useQuery({
-    queryKey: [QueryTags.getAllProducts],
+    queryKey: [QueryTags.getAllProducts, queryParams.toString()],
     queryFn: () => GetAllProducts({ queryParams }),
   });
 

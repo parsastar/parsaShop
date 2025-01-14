@@ -1,33 +1,20 @@
 "use client";
-import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { PaginationList, PaginationMock } from "@/components/shared/Pagination";
 import { useGetAllProductsQuery } from "@/hooks/queries/product";
 import ProductsList, { ProductsListMock } from "./parts/ProductsList";
 import ProductFilters from "../dashboard/products/parts/ProductFilters";
 
-export default function Shop() {
-  const searchParams = useSearchParams();
-  console.log("reloading , " , searchParams)
-  const queryParams = new URLSearchParams({
-    page: searchParams.get("page") || "1",
-    pageSize: searchParams.get("pageSize") || "20",
-    search: searchParams.get("search") || "",
-    category: searchParams.get("category") || "",
+export default function Shop({ queryString }: { queryString: string }) {
+  const { data, status } = useGetAllProductsQuery({
+    queryParams: queryString,
   });
-  const { data, refetch, status } = useGetAllProductsQuery({
-    queryParams: queryParams.toString(),
-  });
-
-  useEffect(() => {
-    refetch();
-  }, [searchParams]);
-
+  console.log("rendering ")
   return (
     <div className="flex  flex-col py-10 gap-10">
       <ProductFilters
         totalProducts={data?.pagination.totalProducts.toString()}
-        searchParams={searchParams.toString()}
+        searchParams={queryString}
       />
       <div className="w-full min-h-[400px]">
         {status == "error" && <p>There Is An Error While Fetching Products</p>}

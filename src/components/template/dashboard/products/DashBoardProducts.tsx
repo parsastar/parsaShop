@@ -17,12 +17,6 @@ export default function DashBoardProducts() {
   const { data, refetch, status } = useGetAllProductsQuery({
     queryParams: queryParams.toString(),
   });
-  console.log("search params is : " , searchParams)
-
-  useEffect(() => {
-    console.log("search params is : " , searchParams)
-    refetch();
-  }, [searchParams]);
 
   return (
     <div className="flex  flex-col py-10 gap-10">
