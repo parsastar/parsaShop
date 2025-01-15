@@ -21,12 +21,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { IUser } from "src/types/users/TUser";
 import Link from "next/link";
 import { Avatar } from "./ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Button } from "./ui/button";
 import { useSidebarStore } from "src/store/sidebarStore";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Menu items.
 const ADMINPAGES = [
@@ -65,6 +66,11 @@ const ADMINPAGES = [
 
 const USERPAGES = [
   {
+    title: "Profile",
+    url: "/dashboard/profile",
+    icon: Package,
+  },
+  {
     title: "Home",
     url: "/",
     icon: Home,
@@ -73,16 +79,6 @@ const USERPAGES = [
     title: "Shop",
     url: "/shop",
     icon: ShoppingCart,
-  },
-  {
-    title: "Profile",
-    url: "/dashboard/profile",
-    icon: Package,
-  },
-  {
-    title: "Payments",
-    url: "/dashboard/products",
-    icon: DollarSign,
   },
 ];
 
@@ -95,7 +91,15 @@ type TSessionUserData = {
 };
 export function AppSidebar({ user }: { user: TSessionUserData }) {
   const { open } = useSidebarStore();
-  console.log(open);
+  const session = useSession();
+  const router = useRouter();
+  const signOutHandler = () => {
+    if (session) {
+      signOut();
+    } else {
+      router.push("/signin");
+    }
+  };
   const items = user.role == "ADMIN" ? ADMINPAGES : USERPAGES;
   return (
     <Sidebar collapsible="icon">
@@ -124,7 +128,7 @@ export function AppSidebar({ user }: { user: TSessionUserData }) {
       <SidebarFooter>
         <SidebarMenuButton asChild>
           <Button
-            onClick={() => console.log("hey")}
+            onClick={() => signOutHandler()}
             className={`w-full ${
               open ? "gap-2" : "gap-0"
             }  flex bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90 hover:text-sidebar-primary-foreground shadow-none`}

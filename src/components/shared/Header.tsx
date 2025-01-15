@@ -1,18 +1,15 @@
 "use client";
-
 import { CircleUser, ShoppingCart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-
 import SignButton from "./buttons/SignButton";
 import { useBasketStore } from "@/store/basketStore";
-import { Button } from "../ui/button";
 export default function Header() {
   const { data } = useSession();
   const pathname = usePathname();
-  const { items, setOpen, countAll } = useBasketStore();
+  const { countAll } = useBasketStore();
   if (pathname.startsWith("/dashboard")) {
     return;
   }
@@ -72,6 +69,6 @@ export default function Header() {
 }
 
 const Pages = [
-  { name: "Home", to: "/" },
+  { name: "About", to: "/" },
   { name: "Shop", to: "/shop" },
 ];

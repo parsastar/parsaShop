@@ -29,7 +29,8 @@ const Payment = () => {
           Restart={Restart}
         />
       ) : (
-        <p> formMock </p>
+        <div>
+          </div>
       )}
     </div>
   );

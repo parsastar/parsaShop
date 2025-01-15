@@ -23,6 +23,10 @@ export default function DashHeader() {
       to: "/dashboard/users",
     },
     {
+      name: "Profile",
+      to: "/dashboard/profile",
+    },
+    {
       name: "Categories",
       to: "/dashboard/categories",
       button: {

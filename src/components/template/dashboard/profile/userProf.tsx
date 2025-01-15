@@ -1,11 +1,33 @@
+"use client";
+import { useGetUserByIdQuery } from "@/hooks/queries/users";
+import { useGetPaymentsByUserId } from "@/hooks/queries/payments";
+import UserPayments from "../user/UserPayments";
+import { UserProfileMock } from "../user/UserProfile";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useDashModal } from "@/store/dashModalStore";
 import { TUserWithID } from "src/types/api/users";
 
-const UserProfile = ({ user }: { user: TUserWithID }) => {
-  const { setStep } = useDashModal();
+const UserProf = ({ userId }: { userId: string }) => {
+  const { data, status } = useGetUserByIdQuery({ id: userId });
+  const { data: payments, status: payStatus } = useGetPaymentsByUserId({
+    id: userId,
+  });
+  return (
+    <div className="flex gap-5 my-5 flex-col min-h-[500px]">
+      {status == "success" ? (
+        <UserProfile user={data.user} />
+      ) : (
+        <UserProfileMock />
+      )}
+      {payStatus == "success" && <UserPayments payments={payments.data} />}
+      {payStatus == "pending" && <p> loading payments </p>}
+      {payStatus == "error" && <p> no payment has done yet </p>}
+    </div>
+  );
+};
 
+export default UserProf;
+
+const UserProfile = ({ user }: { user: TUserWithID }) => {
   return (
     <div className="flex w-full justify-between rounded-3xl bg-[rgb(250_250_250)] shadow-sm p-10">
       <div className="flex gap-2">
@@ -33,35 +55,7 @@ const UserProfile = ({ user }: { user: TUserWithID }) => {
         </p>
         <div className="flex gap-2 items-center justify-start">
           <p className="text-gray-700 text-base">{user.pocket || 0} $</p>
-          <Button
-            onClick={() =>
-              setStep({ newStep: { value: "pocket", selected: user } })
-            }
-            className="p-2"
-          >
-            ADD CREDIT{" "}
-          </Button>
         </div>
-      </div>
-    </div>
-  );
-};
-
-export default UserProfile;
-
-export const UserProfileMock = () => {
-  return (
-    <div className="flex w-full justify-between rounded-3xl bg-[rgb(250_250_250)] shadow-sm p-10">
-      <div className="flex gap-2">
-        <Skeleton className="rounded-full text-white  w-20 aspect-square flex justify-center items-center" />
-        <div className="flex flex-col gap-2 justify-center">
-          <Skeleton className="h-6 w-36" />
-          <Skeleton className="h-4 w-16" />
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 items-end justify-center">
-        <Skeleton className="h-5 w-32" />
-        <Skeleton className="h-5 w-20" />
       </div>
     </div>
   );
